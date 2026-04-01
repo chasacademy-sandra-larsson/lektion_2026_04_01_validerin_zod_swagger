@@ -26,12 +26,25 @@ router.get('/', async (req, res) => {
   //   .from(posts)
   //   .leftJoin(users, eq(posts.userId, users.id))
 
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+  const offset = (page - 1) * limit
+
   // Alternativ 2: Tydligare med findMany från Drizzle relations
   const allPosts = await db.query.posts.findMany({
+    // with som JOIN
     with: {
-        author: true
+        author: true,
+        // comments: true,
+        // postCategories: {
+        //   with: {
+        //     category: true
+        //   }
+        // }
     },
-    orderBy: [desc(posts.createdAt)] 
+    orderBy: [desc(posts.createdAt)], // Sortering. Fallande med nyaste inlägget först
+    limit: limit,
+    offset: offset
   })
 
   res.status(200).json(allPosts)
