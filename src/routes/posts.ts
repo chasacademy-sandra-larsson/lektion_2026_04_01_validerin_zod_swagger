@@ -30,6 +30,7 @@ router.get('/', async (req, res) => {
   const limit = parseInt(req.query.limit as string) || 10;
   const offset = (page - 1) * limit
 
+
   // Alternativ 2: Tydligare med findMany från Drizzle relations
   const allPosts = await db.query.posts.findMany({
     // with som JOIN

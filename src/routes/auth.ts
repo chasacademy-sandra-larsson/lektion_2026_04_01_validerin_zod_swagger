@@ -4,6 +4,7 @@ import { users } from "../db/schema"
 import { eq } from "drizzle-orm"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { validate, userSchema} from "../middleware/validate"
 
 
 const router = Router();
@@ -12,7 +13,7 @@ const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 // Signup route
-router.post('/signup', async (req, res) => {
+router.post('/signup', validate(userSchema), async (req, res) => {
 
  try {
     // 1. Hämta email och password från body
